@@ -1,0 +1,4 @@
+D  Neu Anheizen     Heizfehler   
+D  F�llt�r auf    Heizgas: 36�C  
+D   Anheizen      Heizgas: 36�C  
+D    Vollast      Heizgas: 454�C 
