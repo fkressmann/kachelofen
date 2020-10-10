@@ -9,6 +9,7 @@
 const String prefix = MQTT_PREFIX;
 const String deviceName = DEVICE_NAME;
 
+#define LED D4
 WiFiClient espClient;
 PubSubClient client(espClient);
 
@@ -109,6 +110,7 @@ void detectScreen(String screen) {
 }
 
 void setup() {
+  pinMode(LED, OUTPUT);
   Serial.begin(9600);
   Serial.setTimeout(100);
   Serial.println("Booting");
@@ -177,17 +179,18 @@ void setup() {
 
 void loop() {
   ArduinoOTA.handle();
+  if (!client.connected()) {
+    reconnect();
+  }
+  client.loop();
   if (Serial.available() > 32) {
-    sendData(tele, "Reading data...");
+    digitalWrite(LED, LOW);
     String screen = Serial.readStringUntil(0);
-    sendData(tele, "Reading done");
     if (checkRes(screen)) {
-      sendData(tele, "Processing...");
       detectScreen(screen);
+      digitalWrite(LED, HIGH);
     } else {
       sendData(tele, "Screen not valid: " + screen, true);
     }
-    sendData(tele, "Processing done");
-    // sendData("data", screen);
   }
 }
