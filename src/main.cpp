@@ -13,6 +13,10 @@ WiFiClient espClient;
 PubSubClient client(espClient);
 
 int temp = 0;
+const int debounce_size = 30;
+int debounce_counter = 0;
+bool debounce_init_done = false;
+int debounce_array[debounce_size];
 String status;
 String tele = "tele";
 
@@ -58,9 +62,27 @@ bool checkRes(String res) {
   return res[0] == 'D' && res.length() == 33;
 }
 
+int debounce_temp(int reading) {
+  debounce_array[debounce_counter] = reading;
+  debounce_counter++;
+  if (debounce_counter >= debounce_size) {
+    debounce_counter = 0;
+    debounce_init_done = true;
+  }
+  if (debounce_init_done){
+    int sum = 0;
+    for (int i = 0; i < debounce_size; i++) {
+      sum += debounce_array[i];
+    }
+    return sum / debounce_size;
+  }
+  return 0;
+}
+
 void parseTempAndSendIfChanged(String tempString) {
   int newTemp = tempString.toInt();
-  if (newTemp != temp) {
+  newTemp = debounce_temp(newTemp);
+  if (newTemp && newTemp != temp) {
       temp = newTemp;
       sendData("temp", String(temp));
   }
@@ -168,6 +190,4 @@ void loop() {
     sendData(tele, "Processing done");
     // sendData("data", screen);
   }
-  // delay(50);
-  // sendData(tele, "No serial data...");
 }
