@@ -7,7 +7,7 @@
 
 
 const String prefix = MQTT_PREFIX;
-const String deviceName = DEVICE_NAME;
+const char* deviceName = DEVICE_NAME;
 
 #define LED D4
 WiFiClient espClient;
@@ -42,7 +42,7 @@ void reconnect() {
     // Attempt to connect
     //if you MQTT broker has clientID,username and password
     //please change following line to    if (client.connect(clientId,userName,passWord))
-    if (client.connect(deviceName.c_str()))
+    if (client.connect(deviceName))
     {
       Serial.println("connected");
      //once connected to MQTT broker, subscribe command if any
@@ -130,7 +130,7 @@ void setup() {
   // ArduinoOTA.setPort(8266);
 
   // Hostname defaults to esp8266-[ChipID]
-  ArduinoOTA.setHostname(deviceName.c_str());
+  ArduinoOTA.setHostname(deviceName);
 
   // No authentication by default
   // ArduinoOTA.setPassword("admin");
