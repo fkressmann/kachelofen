@@ -82,15 +82,16 @@ int debounce_temp(int reading) {
 
 void parseTempAndSendIfChanged(String tempString) {
   int newTemp = tempString.toInt();
-  newTemp = debounce_temp(newTemp);
-  if (newTemp && newTemp != temp) {
-      temp = newTemp;
+  int debouncedTemp = debounce_temp(newTemp);
+  if (debouncedTemp && debouncedTemp != temp) {
+      temp = debouncedTemp;
       sendData("temp", String(temp));
   }
 }
 
 void parseFirstLineAndSendIfChanged(String substring) {
   substring.trim();
+  substring.replace("\xF5", "ü");
   if (!substring.equals(status)) {
     status = substring;
     sendData("status", status);
