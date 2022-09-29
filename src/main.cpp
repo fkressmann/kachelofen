@@ -189,9 +189,9 @@ void loop() {
     String screen = Serial.readStringUntil(0);
     if (checkRes(screen)) {
       detectScreen(screen);
-      digitalWrite(LED, HIGH);
     } else {
       sendData(tele, "Screen not valid: " + screen, true);
     }
+    digitalWrite(LED, HIGH);
   }
 }
