@@ -46,7 +46,6 @@ void reconnect() {
     {
       Serial.println("connected");
      //once connected to MQTT broker, subscribe command if any
-      client.subscribe((prefix + '#').c_str());
       sendData("ip", WiFi.localIP().toString(), true);
       sendData("rssi", String(WiFi.RSSI()), true);
     } else {
