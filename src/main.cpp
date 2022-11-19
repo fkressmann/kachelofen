@@ -42,7 +42,7 @@ void reconnect() {
     // Attempt to connect
     //if you MQTT broker has clientID,username and password
     //please change following line to    if (client.connect(clientId,userName,passWord))
-    if (client.connect(deviceName))
+    if (client.connect(deviceName, MQTT_USER, MQTT_PASSWORD))
     {
       Serial.println("connected");
      //once connected to MQTT broker, subscribe command if any
