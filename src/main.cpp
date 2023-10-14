@@ -34,6 +34,13 @@ void sendData(String subtopic, String data) {
   sendData(subtopic, data, false);
 }
 
+void sendStatusIfChanged(const String &newStatus) {
+  if (!newStatus.equals(status)) {
+    status = newStatus;
+    sendData("status", status);
+  }
+}
+
 void reconnect() {
   // Loop until we're reconnected
   while (!client.connected()) 
@@ -91,10 +98,7 @@ void parseTempAndSendIfChanged(String tempString) {
 void parseFirstLineAndSendIfChanged(String substring) {
   substring.trim();
   substring.replace("\xF5", "ü");
-  if (!substring.equals(status)) {
-    status = substring;
-    sendData("status", status);
-  }
+  sendStatusIfChanged(substring);
 }
 
 void detectScreen(String screen) {
@@ -103,7 +107,7 @@ void detectScreen(String screen) {
     parseTempAndSendIfChanged(screen.substring(27, 30));
     parseFirstLineAndSendIfChanged(screen.substring(1, 17));
   } else if (screen[20] == 'H' && screen[29] == 'r') {
-    sendData("status", "Heizfehler");
+    sendStatusIfChanged("Heizfehler");
   } else {
     sendData(tele, "Cannot detect screen: " + screen, true);
   }
@@ -129,7 +133,6 @@ void setup() {
   // Port defaults to 8266
   // ArduinoOTA.setPort(8266);
 
-  // Hostname defaults to esp8266-[ChipID]
   ArduinoOTA.setHostname(deviceName);
 
   // No authentication by default
